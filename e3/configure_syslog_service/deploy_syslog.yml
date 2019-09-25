@@ -1,0 +1,10 @@
+---
+- hosts: test
+  become: yes
+  vars:
+    def_logs: default.log
+    cust_logs: custom.log
+    server: zuzana1c.mylabserver.com
+  roles:
+    - /home/ansible/e3/configure_syslog_service
+

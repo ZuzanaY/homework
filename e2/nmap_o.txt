@@ -1,0 +1,4 @@
+# Nmap 7.01 scan initiated Wed Sep 25 21:11:33 2019 as: nmap -oG ./nmap_n.txt 172.31.30.68
+Host: 172.31.30.68 ()	Status: Up
+Host: 172.31.30.68 ()	Ports: 22/open/tcp//ssh///, 514/open/tcp//shell///, 5901/open/tcp//vnc-1///, 6001/open/tcp//X11:1///	Ignored State: closed (996)
+# Nmap done at Wed Sep 25 21:11:33 2019 -- 1 IP address (1 host up) scanned in 0.04 seconds

@@ -1,0 +1,32 @@
+---
+#tasks file for rsyslog
+- name: dependencies 1
+  apt_repository:
+    repo: 'ppa:nginx/stable'
+    codename: 'trusty'
+- name: dependencies 2
+  apt:
+    update_cache: yes
+- name: Update all packages to the latest version
+  apt:
+    name: aptitude 
+    state: latest
+- apt:
+    name: rsyslog
+    state: latest
+- name: config1
+  template:
+    src: rsyslog.conf.j2 
+    dest: /etc/rsyslog.conf
+- name: config2
+  template:
+    src: 50-default.conf.j2 
+    dest: /etc/rsyslog.d/50-default.conf
+- name: start syslog
+  service:
+    name: rsyslog
+    state: started
+    enabled: yes
+
+
+

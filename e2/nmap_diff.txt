@@ -1,0 +1,2 @@
+Host: 172.31.30.28 ()	Ports: 22/open/tcp//ssh///, 5901/open/tcp//vnc-1///, 6001/open/tcp//X11:1///	Ignored State: closed (997)
+Host: 172.31.30.210 ()	Ports: 22/open/tcp//ssh///, 5901/open/tcp//vnc-1///, 6001/open/tcp//X11:1///	Ignored State: closed (997)

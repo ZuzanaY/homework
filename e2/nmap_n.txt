@@ -1,0 +1,8 @@
+# Nmap 7.01 scan initiated Wed Sep 25 21:11:44 2019 as: nmap -oG ./nmap_n.txt 172.31.30.00/24
+Host: 172.31.30.28 ()	Status: Up
+Host: 172.31.30.28 ()	Ports: 22/open/tcp//ssh///, 5901/open/tcp//vnc-1///, 6001/open/tcp//X11:1///	Ignored State: closed (997)
+Host: 172.31.30.68 ()	Status: Up
+Host: 172.31.30.68 ()	Ports: 22/open/tcp//ssh///, 514/open/tcp//shell///, 5901/open/tcp//vnc-1///, 6001/open/tcp//X11:1///	Ignored State: closed (996)
+Host: 172.31.30.210 ()	Status: Up
+Host: 172.31.30.210 ()	Ports: 22/open/tcp//ssh///, 5901/open/tcp//vnc-1///, 6001/open/tcp//X11:1///	Ignored State: closed (997)
+# Nmap done at Wed Sep 25 21:12:06 2019 -- 256 IP addresses (3 hosts up) scanned in 22.76 seconds

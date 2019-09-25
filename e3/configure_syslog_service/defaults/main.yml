@@ -1,0 +1,5 @@
+---
+# defaults file for configure_syslog_service
+def_logs: default.log
+cust_logs: custom.log
+server: zuzana1c.mylabserver.com

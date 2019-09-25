@@ -1,0 +1,3 @@
+---
+# tasks file for configure_syslog_service
+- include: rsyslog.yml
