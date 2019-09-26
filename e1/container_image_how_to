@@ -1,0 +1,10 @@
+* prepare docker image
+- docker image pull ubuntu:16.04
+- spin container
+- install into it python 3
+- uploads modules pyowm and requests 
+- upload getweather* files to container /
+- create image from currect container (zuzanay/ubuntutest:version1)
+- save image zuzanay_ubuntutest_version1
+- continue to install with included ansible playbook
+
