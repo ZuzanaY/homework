@@ -1,0 +1,7 @@
+{
+  "log-driver": "syslog",
+  "log-opts": {
+    "syslog-address": "udp://172.31.36.159:514"
+  }
+}
+

@@ -1,10 +1,10 @@
-* prepare docker image
-- docker image pull ubuntu:16.04
-- spin container
-- install into it python 3
-- uploads modules pyowm and requests 
-- upload getweather* files to container /
-- create image from currect container (zuzanay/ubuntutest:version1)
-- save image zuzanay_ubuntutest_version1
-- continue to install with included ansible playbook
+* distribution server install:
+- install python 3, 
+- install and configure docker, ansible
+- uploads modules pyowmm, requests docker-py
+- upload scripts and config files with folder strucure unchanged 
+- run ansible playbook: ansible-playbook ansible_install_docker.yml  --extra-vars "rebuild_docker_image=yes"
+  - initial run should be with set rebuild_docker_image=yes
+  - rebuild_docker_image=yes is necessary just  when container image changes
+
 

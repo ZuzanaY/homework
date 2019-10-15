@@ -1,0 +1,52 @@
+- name: Remove image
+  docker_image:
+    state: absent
+    name: "{{container_name_short}}"
+    tag: "{{container_tag}}"
+  delegate_to: localhost
+  run_once: true
+
+- name: Build the docker image
+  docker_image:
+    build:
+      path: "{{path}}/docker"
+      pull: yes
+    name: "{{container_name_short}}"
+    tag: "{{container_tag}}"
+    source: build
+  delegate_to: localhost
+  run_once: true
+
+- name: Save the docker image
+  command: "docker save {{container_name}} -o {{path}}/docker/{{container_image}}.tar"
+  delegate_to: localhost
+  run_once: true
+
+- name: Delete compressed file
+  file:
+    state: absent
+    path: "{{path}}/docker/{{container_image}}.tar.gz"
+  delegate_to: localhost
+  run_once: true
+
+- name: Compress docker archive
+  command: "tar -czvf {{path}}/docker/{{container_image}}.tar.gz {{path}}/docker/{{container_image}}.tar"
+  delegate_to: localhost
+  run_once: true
+
+#  command: "tar -czvf {{path}}/docker/{{container_image}}.tar.gz {{path}}/docker/{{container_image}}.tar && chmod 0644 {{path}}/docker/{{container_image}}.tar.gz && chgrp ansible {{path}}/docker/{{container_image}}.tar.gz && chown ansible {{path}}/docker/{{container_image}}.tar.gz"
+#- name: Compress docker archive
+#  archive:
+#    path:
+#    - "{{path}}/docker/{{container_image}}.tar"
+#    dest: "{{path}}/docker/{{container_image}}.tar.gz"
+#    format: gz
+#  run_once: true
+
+- name: Delete archive
+  file:
+    state: absent
+    path: "{{path}}/docker/{{container_image}}.tar"
+  delegate_to: localhost
+  run_once: true
+

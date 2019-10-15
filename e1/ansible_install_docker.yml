@@ -1,21 +1,63 @@
----
-- hosts: all
-  become: true
-  become_user: root
-  vars:
-    create_containers: 1
-    default_container_name: docker
-    default_container_image: zuzanay/ubuntutest_version1
-
+---                                                                                                                                                                                                       
+- hosts: all                                                                                                                                                                                              
+  become: true                                                                                                                                                                                            
+  become_user: root                                                                                                                                                                                       
+  vars:                                                                                                                                                                                                   
+    container_name: zuzanay/ubuntutest:v1                                                                                                                                                           
+    container_name_short: zuzanay/ubuntutest
+    container_tag: v1
+    container_image: zuzanay_ubuntutest_v1                                                                                                                                                          
+    path: /home/ansible/homework/e1                                                                                                                                                                       
+                                                                                                                                                                                                          
   tasks:
-    - name: Install aptitude using apt
+    - name: Install aptitude using apt                                                                  # install tool
       apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
 
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
       loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
 
-    - name: Add Docker GPG apt Key
+    - name: Create homework directory
+      file:
+        path: "{{path}}/docker"
+        state: directory
+        mode: "u=rwx,g=rwx,o=rwx"
+        recurse: yes
+
+    - name: Create homework directory 2
+      file:
+        path: "{{path}}/rsyslog"
+        state: directory
+        mode: "u=rwx,g=rwx,o=rwx"
+        recurse: yes
+
+    - name: Install rsyslog                                                                            # install rsyslog
+      apt: name=rsyslog state=latest update_cache=yes 
+
+    - name: Copy rsyslog config 1                                                                      # replace configs
+      copy:
+        src: "{{path}}/rsyslog/rsyslog.conf"
+        dest: /etc/rsyslog.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy rsyslog config 2
+      copy:
+        src: "{{path}}/rsyslog/50-default.conf"
+        dest: /etc/rsyslog.d/50-default.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Restart or start rsyslog servicei                                                         # restart rsyslog
+      systemd:
+        name: rsyslog
+        state: restarted
+        daemon_reload: yes    
+      become: yes
+
+    - name: Add Docker GPG apt Key                                                                   # install and start docker
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
@@ -28,27 +70,64 @@
     - name: Update apt and install docker-ce
       apt: update_cache=yes name=docker-ce state=latest
 
-    - name: Copy Docker Image 
+    - debug:                                                                                       # build docker image if variable rebuild_docker_image is yes
+        msg: "Building the docker image start:"
+      when:
+        - rebuild_docker_image is defined
+        - rebuild_docker_image == "yes"
+      run_once: true
+      delegate_to: localhost
+
+    - name: Include task list in play only if the condition is true
+      include: ansible_build_docker_image.yml
+      when:
+        - rebuild_docker_image is defined
+        - rebuild_docker_image == "yes"
+      run_once: true
+      delegate_to: localhost
+
+    - debug:
+        msg: "Building the docker image end"
+      when:
+        - rebuild_docker_image is defined
+        - rebuild_docker_image == "yes"
+      run_once: true
+      delegate_to: localhost
+
+    - name: Copy Docker Image                                                                       # load and prepare specific docker image
       copy:
-        src: /home/ansible/homework/e1/zuzanay_ubuntutest_version1.tar.gz
-        dest: /home/ansible/homework/e1
+        src: "{{path}}/docker/{{container_image}}.tar.gz"
+        dest: "{{path}}/docker"
         owner: ansible
         group: ansible
         mode: '0644'
 
     - name: Unarchive a file that is already on the remote machine
-      unarchive:
-        src: /home/ansible/homework/e1/zuzanay_ubuntutest_version1.tar.gz
-        dest: /home/ansible/homework/e1
-        remote_src: yes
+      command: "tar -xvzf {{path}}/docker/{{container_image}}.tar.gz -C /"
 
-    - name: load the docker image
-      command: docker load --input /home/ansible/homework/e1/zuzanay_ubuntutest_version1.tar
- 
-    - name: start docker service
-      service: 
+#    - name: Unarchive a file that is already on the remote machine
+#      unarchive:
+#        src: "{{path}}/docker/{{container_image}}.tar.gz"
+#        dest: "{{path}}/docker"
+#        remote_src: yes
+
+    - name: Load the docker image
+      command: docker load --input "{{path}}/docker/{{container_image}}.tar"
+
+    - name: Copy Dockedd service
+      copy:
+        src: "{{path}}/docker/daemon.json" 
+        dest: /etc/docker
+        owner: root
+        group: root
+        mode: '0744'
+
+    - name: Restart docker daemon with new config                                               # restart docker
+      systemd:
         name: docker
-        state: started
-        enabled: yes
-      become: true
-      
+        state: restarted
+        daemon_reload: yes
+      become: yes
+
+
+

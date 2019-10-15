@@ -1,0 +1,4 @@
+#!/bin/bash
+path=`pwd`/`dirname "$0"`/getweather.py
+python3.6 
+

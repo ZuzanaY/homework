@@ -1,4 +1,0 @@
-#export API_KEY="9463a34f5facbb0a6d0e02d1d8b2aefe"
-#export CITY="London,GB"
-python3.6 getweather.py
-
